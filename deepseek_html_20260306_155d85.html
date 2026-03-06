@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>IUB Portal · student name below menu</title>
+    <!-- Font Awesome 6 + 5 (for family page) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* ---------- global / portal styles - mobile first ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        body {
+            background: #e9f0f6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* login - mobile optimized */
+        .login-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 0;
+            padding: 0 12px;
+        }
+
+        .uni-header {
+            width: 100%;
+            background-color: #b0e0fa;
+            padding: 12px 16px;
+            border-bottom: 2px solid #7ec1e8;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .uni-header .uni-text {
+            font-size: 1.3rem;
+            font-weight: 570;
+            color: #043b66;
+            text-transform: uppercase;
+            display: block;
+            max-width: 100%;
+            margin: 0 auto;
+            letter-spacing: 0.5px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 360px;
+            padding: 20px 20px 24px;
+            border-radius: 20px;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
+            border: 1px solid #dee7ef;
+            margin: 0 auto 24px;
+        }
+
+        .card h1 { font-size: 1.3rem; margin-bottom: 4px; }
+        .subhead { font-size: 0.75rem; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #e2eaf2; }
+        .input-field {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 0.8rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+        .password-label-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+            font-size: 0.8rem;
+        }
+        .forgot-link { font-size: 0.65rem; }
+        .button-wrapper { display: flex; justify-content: flex-end; margin-top: 12px; }
+        .login-btn {
+            background-color: #1a6bc7;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            font-size: 0.75rem;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+
+        /* dashboard - mobile optimized */
+        .dashboard-section {
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 12px 20px;
+            display: none;
+            position: relative;
+        }
+
+        .dashboard-header {
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+            background-color: #b0e0fa;
+            padding: 8px 16px 4px 16px;
+            border-bottom: 2px solid #7ec1e8;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header-top-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .menu-button {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 26px;
+            height: 20px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            padding: 0;
+            transition: opacity 0.2s;
+        }
+        .menu-button:hover { opacity: 0.75; }
+        .menu-button span {
+            width: 100%;
+            height: 3px;
+            background-color: #043b66;
+            border-radius: 3px;
+        }
+        
+        .dashboard-header .uni-text {
+            font-size: 1.2rem;
+            font-weight: 570;
+            color: #043b66;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-right: auto;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .student-name-header {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #043b66;
+            margin-left: 36px;  /* align with menu button */
+            margin-top: 2px;
+            margin-bottom: 4px;
+            padding-left: 0;
+        }
+
+        /* sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 260px;
+            height: 100vh;
+            background: #ffffff;
+            box-shadow: 4px 0 20px rgba(0, 20, 40, 0.15);
+            transition: left 0.3s ease;
+            z-index: 1000;
+            border-top-right-radius: 24px;
+            border-bottom-right-radius: 24px;
+            padding: 24px 0 24px 16px;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar.open { left: 0; }
+        .sidebar .sidebar-header {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #043b66;
+            margin-bottom: 24px;
+            padding-left: 8px;
+            border-bottom: 2px solid #b0e0fa;
+            display: inline-block;
+            padding-right: 24px;
+        }
+        .sidebar ul { list-style: none; width: 100%; }
+        .sidebar li { width: 100%; margin-bottom: 4px; position: relative; }
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px 10px 8px;
+            text-decoration: none;
+            color: #1e3a5f;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 40px 0 0 40px;
+        }
+        .sidebar a i { width: 1.6rem; font-size: 1.1rem; color: #1f6dc7; text-align: center; }
+
+        /* Registration submenu */
+        .registration-submenu {
+            list-style: none;
+            padding-left: 2.4rem;
+            margin-top: -2px;
+            margin-bottom: 4px;
+            display: none;
+        }
+        .registration-submenu.show-submenu { display: block; }
+        .registration-submenu li { margin-bottom: 2px; }
+        .registration-submenu a {
+            padding: 6px 12px 6px 8px;
+            font-size: 0.85rem;
+            gap: 8px;
+        }
+
+        .profile-submenu {
+            list-style: none;
+            padding-left: 2.4rem;
+            margin-top: -2px;
+            margin-bottom: 4px;
+            display: none;
+        }
+        .profile-submenu.show-submenu { display: block; }
+        .profile-submenu li { margin-bottom: 2px; }
+        .profile-submenu a {
+            padding: 6px 12px 6px 8px;
+            font-size: 0.85rem;
+            gap: 8px;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 999;
+            display: none;
+        }
+        .overlay.show { display: block; }
+
+        /* ---------- DASHBOARD MAIN CONTENT - MOBILE REDUCED FONTS & SPACING ---------- */
+        .d-header h1 {
+            font-size: 1.4rem;
+            color: #3a4a5a;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .d-header .breadcrumb {
+            font-size: 0.75rem;
+            color: #3b5f7a;
+            margin-bottom: 16px;
+        }
+
+        .top-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .student-info-card,
+        .advisor-message-card {
+            border-radius: 20px;
+            padding: 16px 18px 18px;
+            width: 100%;
+        }
+
+        .student-info-card {
+            background-color: #e9f0f6;
+            border: 1px solid #cbdae7;
+        }
+
+        .student-info-card .title,
+        .advisor-message-card .title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #9bb9e0;
+            padding-bottom: 6px;
+        }
+
+        .advisor-message-card .title {
+            border-bottom-color: #cbdae7;
+        }
+
+        .info-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #10324f;
+            min-width: 60px;
+            font-size: 0.8rem;
+        }
+        .info-value {
+            color: #122e44;
+            margin-right: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .change-row {
+            margin-top: -4px;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 16px;
+        }
+        .change-link {
+            background: #1a6bc7;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 4px 14px;
+            border-radius: 30px;
+            text-decoration: none;
+            border: 1px solid #0e5cb3;
+            display: inline-block;
+        }
+        .change-link i { font-size: 0.55rem; margin-right: 4px; }
+
+        .advisor-txt {
+            font-size: 0.85rem;
+            margin: 12px 0 10px;
+            font-weight: 500;
+        }
+        .advisor-txt strong { font-weight: 650; color: #0d2d4b; }
+
+        .success-link {
+            background: #ffffffd9;
+            color: #0f5da0;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-block;
+            text-decoration: none;
+            border: 1px solid #aac6ec;
+        }
+
+        .advisor-msg {
+            background: #f4faff;
+            border-radius: 16px;
+            padding: 12px 16px;
+        }
+        .advisor-msg p {
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            color: #193d5e;
+        }
+
+        /* RESULT CARD - left aligned, no icon, reduced spacing */
+        .result-card {
+            background: white;
+            border-radius: 20px;
+            padding: 16px 16px 18px;
+            border: 1px solid #dde5ed;
+            margin-bottom: 16px;
+        }
+        
+        .result-card .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #153e60;
+            border-bottom: 2px solid #cbdae7;
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .result-card .section-title i {
+            color: #1f6dc7;
+            font-size: 1.3rem;
+        }
+        
+        .result-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .result-item {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            font-size: 1rem;
+        }
+        .result-item .label {
+            font-weight: 600;
+            min-width: 100px;
+        }
+        .result-item .value {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .credit-card, .reg-card {
+            background: white;
+            border-radius: 20px;
+            padding: 16px 16px 18px;
+            border: 1px solid #dde5ed;
+            margin-bottom: 16px;
+        }
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #153e60;
+            border-bottom: 2px solid #cbdae7;
+            padding-bottom: 6px;
+            margin-bottom: 14px;
+            gap: 8px;
+        }
+        .section-title i { font-size: 1.2rem; }
+
+        .credit-flex {
+            gap: 20px;
+            font-size: 0.9rem;
+            padding: 12px 16px;
+            border-radius: 16px;
+            flex-wrap: wrap;
+        }
+        .credit-flex span { gap: 4px; }
+        .credit-flex i { width: 1.2rem; font-size: 0.9rem; }
+
+        .scholar-badge {
+            padding: 4px 14px;
+            font-size: 0.8rem;
+            margin-left: 8px;
+            display: inline-block;
+        }
+
+        .semester-row {
+            gap: 16px;
+            margin: 14px 0;
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .load-badge {
+            background: #40E0D0;
+            color: white;
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            display: inline-block;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .courses-table, .catalog-table {
+            font-size: 0.75rem;
+            margin: 12px 0;
+        }
+        .courses-table th, .catalog-table th,
+        .courses-table td, .catalog-table td {
+            padding: 6px 2px;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 16px;
+            margin: 16px 0;
+            flex-wrap: wrap;
+        }
+        
+        .action-link {
+            font-weight: 600;
+            font-size: 0.9rem;
+            background: #40E0D0;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            display: inline-block;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .action-link i {
+            color: white !important;
+            margin-right: 6px;
+        }
+
+        /* LIGHT GREEN for Foundation Courses Catalog title */
+        .catalog-title {
+            color: #90EE90 !important;
+            font-size: 0.95rem;
+            margin-top: 16px;
+        }
+
+        /* TURQUOISE for attendance note */
+        .att-note {
+            background: #f0f4fa;
+            padding: 8px 14px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            line-height: 1.4;
+            color: #40E0D0 !important;
+        }
+        .att-note i { 
+            color: #1f6dc7 !important;
+        }
+
+        .tab-mini {
+            gap: 20px;
+            margin: 14px 0 12px;
+        }
+        .tab-mini span {
+            font-size: 0.95rem;
+        }
+
+        h3 { font-size: 1.1rem !important; }
+        h4 { font-size: 0.95rem !important; }
+
+        /* family page container */
+        .family-page-container {
+            display: none;
+            margin-top: 16px;
+        }
+        .family-card {
+            max-width: 880px;
+            width: 100%;
+            background: white;
+            border-radius: 28px 28px 20px 20px;
+            box-shadow: 0 20px 40px -10px rgba(0, 30, 50, 0.25);
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.03);
+            margin: 0 auto;
+        }
+        .family-card .top-bar { background: #fefefe; padding: 24px 24px 16px 24px; border-bottom: 1px solid #dbe1e9; }
+        .family-card .student-info-stack { display: flex; flex-direction: column; gap: 12px; }
+        .family-card .student-item { display: flex; align-items: center; gap: 14px; font-size: 1.15rem; font-weight: 500; letter-spacing: 0.2px; color: #1b9e9e; }
+        .family-card .student-item i { width: 28px; font-size: 1.4rem; color: #1b9e9e; text-align: center; }
+        .family-card .student-item .label { font-weight: 400; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.6px; color: #1b9e9e; opacity: 0.8; min-width: 90px; }
+        .family-card .student-item .value { font-weight: 600; color: #1b9e9e; }
+        .family-card .tab-section { padding: 8px 24px 0 24px; background: white; }
+        .family-card .tabs { display: flex; gap: 28px; border-bottom: 2px solid #dee6ef; padding: 12px 0 4px 0; font-weight: 600; font-size: 1.1rem; color: #2f4057; }
+        .family-card .tabs span:first-child { color: #0c2d4b; border-bottom: 3px solid #1b9e9e; }
+        .family-card .tabs span i { margin-right: 8px; color: #577a9e; }
+        .family-card .form-container { padding: 20px 24px 24px 24px; background: white; }
+        .family-card .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 40px; margin-bottom: 10px; }
+        .family-card .grid-2-full { grid-column: span 2; }
+        .family-card .field-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+        .family-card .field-group label { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; color: #2c4d6e; display: flex; align-items: center; gap: 5px; }
+        .family-card .field-group label i { color: #5b7d9e; font-size: 0.85rem; width: 18px; }
+        .family-card .asterisk { color: #c63a3a; font-size: 1.2rem; margin-left: 2px; }
+        .family-card .field-value { background: #f8fafd; border: 1px solid #d2dceb; border-radius: 16px; padding: 12px 18px; font-size: 1rem; color: #1e2b3a; font-weight: 500; display: flex; align-items: center; justify-content: space-between; }
+        .family-card .field-value span { color: #1f3a57; }
+        .family-card .field-value i { color: #8f9fb1; font-size: 0.9rem; }
+        .family-card .empty-field { color: #9aadc4; font-weight: 400; font-style: italic; }
+        .family-card hr.divider-light { margin: 16px 0 18px 0; border: 0; height: 1px; background: linear-gradient(to right, #d3dee9 20%, transparent 90%); }
+        .family-card .financial-guarantor-note { background: #e2f0f5; border-radius: 20px; padding: 16px 22px; margin: 22px 0 22px 0; border-left: 5px solid #1b9e9e; font-size: 1rem; font-weight: 500; color: #115a5a; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+        .family-card .financial-guarantor-note i { font-size: 1.6rem; color: #1b9e9e; }
+        .family-card .financial-guarantor-note strong { font-weight: 700; background: #b9e6e6; padding: 4px 16px; border-radius: 50px; font-size: 0.95rem; color: #076b6b; }
+        .family-card .footer-copyright { background: #eff4fb; padding: 16px 24px; font-size: 0.82rem; color: #3a5775; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #cfdbe9; flex-wrap: wrap; gap: 15px; }
+        .family-card .footer-copyright i { color: #36689c; margin-right: 6px; }
+        .family-card .footer-copyright .cits { font-weight: 600; color: #1b5a7c; }
+        @media (max-width: 650px) {
+            .family-card .grid-2 { grid-template-columns: 1fr; gap: 12px; }
+            .family-card .top-bar { padding: 18px 18px 12px; }
+            .family-card .student-item { font-size: 0.95rem; gap: 10px; }
+            .family-card .student-item i { font-size: 1.1rem; width: 24px; }
+            .family-card .student-item .label { font-size: 0.8rem; min-width: 70px; }
+            .family-card .tabs { gap: 16px; font-size: 0.9rem; }
+            .family-card .form-container { padding: 16px 18px 20px; }
+            .family-card .field-value { padding: 10px 14px; font-size: 0.9rem; }
+            .family-card .footer-copyright { padding: 14px 18px; font-size: 0.7rem; }
+        }
+
+        /* turquoise text colors preserved for other elements */
+        .cgpa-text, .earned-text, .cgpa-value, .earned-value,
+        .foundation-text, .core-text, .major-text, .minor-text,
+        .foundation-value, .core-value, .major-value, .minor-value {
+            color: #40E0D0 !important;
+        }
+        .credit-flex i, .section-title i {
+            color: #1f6dc7 !important;
+        }
+        .action-link i, .load-badge i {
+            color: white !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- LOGIN VIEW -->
+    <div id="loginView" class="login-section">
+        <div class="uni-header"><span class="uni-text">Independent University, Bangladesh</span></div>
+        <div class="card">
+            <h1>Sign in to your account</h1>
+            <div class="subhead">Please enter your Id and password to log in.</div>
+            <label>User Id</label>
+            <input class="input-field" placeholder="Enter your user ID">
+            <div class="password-label-group">
+                <label>Password</label>
+                <a href="#" class="forgot-link">I forgot my password</a>
+            </div>
+            <input class="input-field" placeholder="Enter your password">
+            <div class="button-wrapper">
+                <button class="login-btn" id="loginBtn" type="button">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD VIEW -->
+    <div id="dashboardView" class="dashboard-section">
+        <!-- full-width header with student name below menu button -->
+        <div class="dashboard-header">
+            <div class="header-top-row">
+                <button class="menu-button" id="menuToggleBtn">
+                    <span></span><span></span><span></span><span></span><span></span>
+                </button>
+                <span class="uni-text">Independent University, Bangladesh</span>
+            </div>
+            <div class="student-name-header">Jamil Hossen Jim</div>
+        </div>
+
+        <!-- sidebar overlay + menu -->
+        <div class="overlay" id="overlay"></div>
+        <div class="sidebar" id="sidebarMenu">
+            <div class="sidebar-header">MENU</div>
+            <ul>
+                <li><a href="#" id="homeLink"><i class="fas fa-home"></i> Home</a></li>
+                
+                <!-- REGISTRATION with submenu -->
+                <li>
+                    <a href="#" id="registrationMainLink"><i class="fas fa-pen-to-square"></i> Registration</a>
+                    <ul class="registration-submenu" id="registrationSubmenu">
+                        <li><a href="#"><i class="fas fa-columns"></i> Student Dashboard</a></li>
+                        <li><a href="#"><i class="fas fa-chart-line"></i> Demand Analysis</a></li>
+                        <li><a href="#"><i class="fas fa-minus-circle"></i> Course Withdraw</a></li>
+                        <li><a href="#"><i class="fas fa-file-invoice-dollar"></i> Registration Bill</a></li>
+                    </ul>
+                </li>
+                
+                <li><a href="#"><i class="fas fa-bell-concierge"></i> Services</a></li>
+                <li><a href="#"><i class="fas fa-chalkboard-user"></i> Faculty evaluation</a></li>
+                <li>
+                    <a href="#" id="profileMainLink"><i class="fas fa-id-card"></i> Profile</a>
+                    <ul class="profile-submenu" id="profileSubmenu">
+                        <li><a href="#" id="myAccountLink"><i class="fas fa-circle-user"></i> My Account</a></li>
+                        <li><a href="#"><i class="fas fa-sliders"></i> Account Setting</a></li>
+                        <li><a href="#"><i class="fas fa-shield"></i> Insurance</a></li>
+                    </ul>
+                </li>
+                <li><a href="#" id="signOutLink"><i class="fas fa-right-from-bracket"></i> Sign out</a></li>
+            </ul>
+        </div>
+
+        <!-- main dashboard content -->
+        <div id="mainDashboardContent">
+            <div class="d-header">
+                <h1>Dashboard student</h1>
+                <div class="breadcrumb">Home &gt; <span>Dashboard</span></div>
+            </div>
+            <div class="top-grid">
+                <div class="student-info-card">
+                    <div class="title">Student Info</div>
+                    <div class="info-row"><span class="info-label">Major:</span><span class="info-value">Computer Science and Engineering</span></div>
+                    <div class="change-row"><a href="#" class="change-link"><i class="fas fa-pen"></i> Change</a></div>
+                    <div class="info-row"><span class="info-label">Minor:</span><span class="info-value">Management Information Systems</span></div>
+                    <div class="change-row"><a href="#" class="change-link"><i class="fas fa-pen"></i> Change Minor</a></div>
+                    <div class="advisor-txt"><strong>Advisor:</strong> MR Dr. Tarem Ahmed</div>
+                    <a href="#" class="success-link"><i class="fas fa-flag-checkered"></i> Success center, please click here.</a>
+                </div>
+                <div class="advisor-message-card">
+                    <div class="title">Advisor's Message</div>
+                    <div class="advisor-msg"><p>1. Allow.</p><p>2. 9 credits max</p></div>
+                </div>
+            </div>
+            
+            <!-- RESULT CARD - left aligned, no icon, reduced spacing -->
+            <div class="result-card">
+                <div class="section-title"><i class="fas fa-chart-line"></i> Result</div>
+                <div class="result-stack">
+                    <div class="result-item">
+                        <span class="label cgpa-text">CGPA:</span>
+                        <span class="value cgpa-value">3.32</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="label earned-text">Earned Credit:</span>
+                        <span class="value earned-value">133</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="credit-card">
+                <div class="section-title"><i class="fas fa-check-circle"></i> Completed Credit</div>
+                <div class="credit-flex">
+                    <span>
+                        <i class="fas fa-flask"></i> 
+                        <span class="foundation-text">Foundation:</span> 
+                        <span class="foundation-value">42</span>
+                    </span>
+                    <span>
+                        <i class="fas fa-code"></i> 
+                        <span class="core-text">Core:</span> 
+                        <span class="core-value">64</span>, 
+                        <span class="major-text">Major:</span> 
+                        <span class="major-value">12</span> 
+                        <span class="minor-text">Minor:</span> 
+                        <span class="minor-value">15</span>
+                    </span>
+                </div>
+            </div>
+            <div class="reg-card">
+                <div class="section-title"><i class="fas fa-calendar-alt"></i> REGISTRATION INFO</div>
+                <div style="font-size:1rem; margin-bottom:12px;">SCHOLARSHIP <span class="scholar-badge">Has no scholarship</span></div>
+                <h3 style="font-size:1.1rem; margin:12px 0 4px;"><i class="fas fa-book-open"></i> Semester-wise Registered Courses</h3>
+                <div class="semester-row">
+                    <span><strong>Year *</strong> <select><option>2026</option></select></span>
+                    <span><strong>Semester *</strong> <select><option>Spring</option></select></span>
+                    <span class="load-badge">LOAD</span>
+                </div>
+                <table class="courses-table">
+                    <tr><th>Code</th><th>Name</th><th>Sec</th><th>Room</th><th>Time</th></tr>
+                    <tr><td>CSE216</td><td>Microprocessor Int...</td><td>1</td><td>BC6009</td><td>MW:08:00-05</td></tr>
+                    <tr><td>CSE216L</td><td>Labwork based on ...</td><td>1</td><td>CENLAB</td><td>M:09:40-11:1</td></tr>
+                    <tr><td>CSE403</td><td>Network Managem...</td><td>1</td><td>BC5002</td><td>T:18:30-21:3</td></tr>
+                    <tr><td>MAT203</td><td>Linear Algebra- vec...</td><td>1</td><td>BC8015</td><td>AR:16:20-17:</td></tr>
+                </table>
+                <div class="action-row">
+                    <span class="action-link"><i class="fas fa-scroll"></i> TRANSCRIPT</span>
+                    <span class="action-link"><i class="fas fa-chart-bar"></i> ATTENDANCE REPORT</span>
+                </div>
+                <div class="att-note"><i class="fas fa-info-circle"></i> Attendance* = Attend/Total Class Count. Minimum 60% attendance in each course is required to sit for the Final Examination.</div>
+                <div class="tab-mini"><span><i class="fas fa-layer-group"></i> Foundation</span><span><i class="fas fa-code"></i> Major</span><span><i class="fas fa-puzzle-piece"></i> Minor</span></div>
+                <h4 class="catalog-title"><i class="fas fa-list"></i> Foundation Courses Catalog: Comprehensive List</h4>
+                <table class="catalog-table">
+                    <tr><th>Course</th><th>Course Name</th><th>Credit Hour</th><th>Course Group</th></tr>
+                    <tr><td>PHY101L</td><td>University Physics-I Lab</td><td>1</td><td>Natural Science</td></tr>
+                    <tr><td>PHY102L</td><td>University Physics-II Lab</td><td>1</td><td>Natural Science</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- family page container -->
+        <div id="familyPageContainer" class="family-page-container">
+            <div class="family-card">
+                <div class="top-bar">
+                    <div class="student-info-stack">
+                        <div class="student-item"><i class="fas fa-id-card"></i><span class="label">Student ID</span><span class="value">2221146</span></div>
+                        <div class="student-item"><i class="fas fa-user-graduate"></i><span class="label">Student Name</span><span class="value">Jamil Hossen Jim</span></div>
+                        <div class="student-item"><i class="fas fa-mobile-alt"></i><span class="label">Mobile No</span><span class="value">+8801786762058</span></div>
+                    </div>
+                </div>
+                <div class="tab-section">
+                    <div class="tabs"><span><i class="fas fa-user"></i> Personal Info</span><span><i class="fas fa-users"></i> Family Info</span><span><i class="fas fa-coins"></i> Fin</span></div>
+                </div>
+                <div class="form-container">
+                    <div class="grid-2"><div class="field-group"><label><i class="fas fa-user-tie"></i> Father's First Name <span class="asterisk">*</span></label><div class="field-value"><span>Md. Ataur</span> <i class="fas fa-pen"></i></div></div><div class="field-group"><label><i class="fas fa-user-tie"></i> Father's Last Name <span class="asterisk">*</span></label><div class="field-value"><span>Rahaman</span> <i class="fas fa-pen"></i></div></div></div>
+                    <div class="grid-2"><div class="field-group"><label><i class="fas fa-user-nurse"></i> Mother's First Name <span class="asterisk">*</span></label><div class="field-value"><span>Mst. Zabun</span> <i class="fas fa-pen"></i></div></div><div class="field-group"><label><i class="fas fa-user-nurse"></i> Mother's Last Name <span class="asterisk">*</span></label><div class="field-value"><span>Nasa</span> <i class="fas fa-pen"></i></div></div></div>
+                    <div class="grid-2"><div class="field-group"><label><i class="fas fa-graduation-cap"></i> Father's Education <span class="asterisk">*</span></label><div class="field-value"><span class="empty-field">— not provided —</span> <i class="fas fa-chevron-down"></i></div></div><div class="field-group"><label><i class="fas fa-graduation-cap"></i> Mother's Education <span class="asterisk">*</span></label><div class="field-value"><span class="empty-field">— not provided —</span> <i class="fas fa-chevron-down"></i></div></div></div>
+                    <div class="grid-2"><div class="field-group"><label><i class="fas fa-briefcase"></i> Father's Profession <span class="asterisk">*</span></label><div class="field-value"><span class="empty-field">Select profession</span> <i class="fas fa-chevron-down"></i></div></div><div class="field-group"><label><i class="fas fa-briefcase"></i> Mother's Profession <span class="asterisk">*</span></label><div class="field-value"><span class="empty-field">Select profession</span> <i class="fas fa-chevron-down"></i></div></div></div>
+                    <div class="grid-2"><div class="field-group grid-2-full"><label><i class="fas fa-hand-holding-usd"></i> Total Annual Family Income <span class="asterisk">*</span></label><div class="field-value"><span class="empty-field">— select income range —</span> <i class="fas fa-chevron-down"></i></div></div></div>
+                    <div class="financial-guarantor-note"><i class="fas fa-handshake"></i><span><strong>Financial Guarantor</strong>  /  Father, Mother, Brother, and Sister</span></div>
+                    <div class="grid-2"><div class="field-group"><label><i class="fas fa-male"></i> Grandfather's First Name <span class="asterisk">*</span></label><div class="field-value"><span class="empty-field">— enter first name —</span> <i class="fas fa-pen"></i></div></div><div class="field-group"><label><i class="fas fa-male"></i> Grandfather's Last Name</label><div class="field-value"><span class="empty-field">— enter last name —</span> <i class="fas fa-pen"></i></div></div></div>
+                    <div class="grid-2"><div class="field-group"><label><i class="fas fa-female"></i> Grandmother's First Name <span class="asterisk">*</span></label><div class="field-value"><span class="empty-field">— enter first name —</span> <i class="fas fa-pen"></i></div></div><div class="field-group"><label><i class="fas fa-female"></i> Grandmother's Last Name</label><div class="field-value"><span class="empty-field">— enter last name —</span> <i class="fas fa-pen"></i></div></div></div>
+                    <div class="grid-2"><div class="field-group"><label><i class="fas fa-chalkboard-teacher"></i> Grandfather's Education <span class="asterisk">*</span></label><div class="field-value"><span class="empty-field">— select education —</span> <i class="fas fa-chevron-down"></i></div></div><div class="field-group"><label><i class="fas fa-chalkboard-teacher"></i> Grandmother's Education <span class="asterisk">*</span></label><div class="field-value"><span class="empty-field">— select education —</span> <i class="fas fa-chevron-down"></i></div></div></div>
+                    <hr class="divider-light">
+                </div>
+                <div class="footer-copyright"><span><i class="far fa-copyright"></i> 2018-2019 Central Information Technology Services (CITS) Team, IUB.</span><span class="cits"><i class="fas fa-laptop"></i> All rights reserved.</span></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const loginView = document.getElementById('loginView');
+            const dashboardView = document.getElementById('dashboardView');
+            const loginBtn = document.getElementById('loginBtn');
+
+            const menuBtn = document.getElementById('menuToggleBtn');
+            const sidebar = document.getElementById('sidebarMenu');
+            const overlay = document.getElementById('overlay');
+            const signOutLink = document.getElementById('signOutLink');
+            
+            // Registration submenu
+            const registrationMainLink = document.getElementById('registrationMainLink');
+            const registrationSubmenu = document.getElementById('registrationSubmenu');
+            
+            // Profile submenu
+            const profileMainLink = document.getElementById('profileMainLink');
+            const profileSubmenu = document.getElementById('profileSubmenu');
+            
+            const myAccountLink = document.getElementById('myAccountLink');
+            const homeLink = document.getElementById('homeLink');
+
+            const mainContent = document.getElementById('mainDashboardContent');
+            const familyContainer = document.getElementById('familyPageContainer');
+
+            loginBtn.addEventListener('click', function() {
+                loginView.style.display = 'none';
+                dashboardView.style.display = 'block';
+                // Always show main dashboard first, hide family
+                mainContent.style.display = 'block';
+                familyContainer.style.display = 'none';
+            });
+
+            function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('show'); }
+            function closeSidebar() { 
+                sidebar.classList.remove('open'); 
+                overlay.classList.remove('show');
+                // Close all submenus when sidebar closes
+                if (profileSubmenu) profileSubmenu.classList.remove('show-submenu');
+                if (registrationSubmenu) registrationSubmenu.classList.remove('show-submenu');
+            }
+
+            menuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (sidebar.classList.contains('open')) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            });
+
+            overlay.addEventListener('click', closeSidebar);
+
+            signOutLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                closeSidebar();
+                dashboardView.style.display = 'none';
+                loginView.style.display = 'block';
+            });
+
+            // Registration dropdown toggle
+            if (registrationMainLink) {
+                registrationMainLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    registrationSubmenu.classList.toggle('show-submenu');
+                    // Close profile submenu if open
+                    if (profileSubmenu) profileSubmenu.classList.remove('show-submenu');
+                });
+            }
+
+            // Profile dropdown toggle
+            if (profileMainLink) {
+                profileMainLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    profileSubmenu.classList.toggle('show-submenu');
+                    // Close registration submenu if open
+                    if (registrationSubmenu) registrationSubmenu.classList.remove('show-submenu');
+                });
+            }
+
+            // MY ACCOUNT button: show family page, hide main dashboard
+            if (myAccountLink) {
+                myAccountLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeSidebar(); // close menu after click
+                    mainContent.style.display = 'none';
+                    familyContainer.style.display = 'block';
+                });
+            }
+
+            // HOME button: return to main dashboard
+            if (homeLink) {
+                homeLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeSidebar();
+                    mainContent.style.display = 'block';
+                    familyContainer.style.display = 'none';
+                });
+            }
+
+            // Prevent clicks inside sidebar from closing it
+            sidebar.addEventListener('click', function(e) { e.stopPropagation(); });
+
+            // Close on escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+                    closeSidebar();
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
